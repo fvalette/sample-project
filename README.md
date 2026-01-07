@@ -1,5 +1,31 @@
 # Outpost sample project
 
+## What this project does
+
+This project hold two tasks:
+
+   * A hello task written in Rust, holding a database of messages that are periodically emitted using IPCs to the other task
+   * a sample task written in C, receiving IPC messages from hello, and calculating the sha256 hash for each received message
+
+The sha256 hash is made using the OpenSource [libecc](https://github.com/libecc/libecc) project.
+
+The exchange loop looks like the following:
+
+```mermaid
+sequenceDiagram
+
+    SampleC->>+SampleC: wait_for_event(ipc)
+    RustHello->>+SampleC: sys_ipc(SampleC, msg)
+    SampleC -->>SampleC: read(ipc)
+    SampleC->>+SampleC: sha256(msg)
+    SampleC->>+SampleC: display(sha256(msg))
+    SampleC->>+SampleC: sys_sleep(1000ms)
+```
+
+This sample project aim to demonstrate a small and easy to upgrade project using both C and Rust applications that interact with each others.
+
+You are free to copy, duplicate or modify these applications in the way you want for your own testing needs with respect for their licences.
+
 ## Basics
 
 This is a sample Camelot-OS project that shows how to create a complete firmware for any personal needs, that include Camelot-OS kernel,
